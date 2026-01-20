@@ -1,6 +1,6 @@
 """
-Procesamiento de Manzanas - Entidades 01 a 17
-Este script procesa imágenes satelitales para todas las entidades desde 01 hasta 17.
+Procesamiento de Manzanas - Entidades 15 a 20
+Este script procesa imágenes satelitales para todas las entidades desde 15 hasta 20.
 """
 
 import os
@@ -30,7 +30,7 @@ logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s',
     handlers=[
-        logging.FileHandler('procesamiento_01_17.log'),
+        logging.FileHandler('procesamiento_15_20.log'),
         logging.StreamHandler()
     ]
 )
@@ -46,7 +46,7 @@ GCS_IMAGES_PREFIX = "manzana/imagenes_satelitales/imagenes"
 GCS_OUTPUT_PREFIX = "manzana/imagenes_satelitales/imagen_manzana"
 
 # Entidades a procesar
-ENTIDADES = [f"{i:02d}" for i in range(9, 10)]  # 01 a 17
+ENTIDADES = [f"{i:02d}" for i in range(15, 21)]  # 15 a 20
 
 LOCAL_TEMP_DIR = Path("./temp_processing")
 LOCAL_TEMP_DIR.mkdir(exist_ok=True)
@@ -54,7 +54,7 @@ LOCAL_TEMP_DIR.mkdir(exist_ok=True)
 TARGET_CRS = "EPSG:3857"
 
 # CSV para tracking
-CSV_OUTPUT = Path("./procesadas_01_17.csv")
+CSV_OUTPUT = Path("./procesadas_15_21.csv")
 
 logger.info(f"Procesando entidades: {', '.join(ENTIDADES)}")
 
@@ -365,7 +365,7 @@ def process_entidad(cve_ent, storage_client, bucket, manzanas_all):
 
 def main():
     logger.info("="*60)
-    logger.info("INICIANDO PROCESAMIENTO MASIVO - ENTIDADES 01 a 17")
+    logger.info("INICIANDO PROCESAMIENTO MASIVO - ENTIDADES 15 a 21")
     logger.info("="*60)
     
     # Inicializar GCS
