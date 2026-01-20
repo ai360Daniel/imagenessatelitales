@@ -1,6 +1,6 @@
 """
 Procesamiento de Manzanas - Entidades 21 a 26
-Este script procesa imágenes satelitales para todas las entidades desde 01 hasta 05.
+Este script procesa imágenes satelitales para todas las entidades desde 21 hasta 26.
 """
 
 import os
@@ -206,43 +206,15 @@ def crop_manzana_image(manzana_geom, manzana_id, area_m2, buffer_multiplier, cve
                 for src in src_files:
                     src.close()
         
-        # Validar que out_image es válido
-        if out_image is None or out_image.size == 0:
-            logger.error(f"out_image inválido para {manzana_id}")
-            return False
+        local_tif_path = LOCAL_TEMP_DIR / f"manzana_{manzana_id}.tif"
+        with rasterio.open(local_tif_path, "w", **out_meta) as dest:
+            dest.write(out_image)
         
-        # Asegurar que out_meta tiene todos los campos requeridos
-        if 'height' not in out_meta or 'width' not in out_meta:
-            logger.error(f"out_meta incompleto para {manzana_id}: {out_meta.keys()}")
-            return False
+        gcs_tif_path = f"{GCS_OUTPUT_PREFIX}/{cve_ent}/{cvegeo}.tif"
+        upload_file_to_gcs(bucket, str(local_tif_path), gcs_tif_path)
+        local_tif_path.unlink()
         
-        try:
-            local_tif_path = LOCAL_TEMP_DIR / f"manzana_{manzana_id}.tif"
-            
-            # Asegurar que el directorio existe
-            local_tif_path.parent.mkdir(parents=True, exist_ok=True)
-            
-            with rasterio.open(local_tif_path, "w", **out_meta) as dest:
-                dest.write(out_image)
-            
-            # Verificar que el archivo se escribió correctamente
-            if not local_tif_path.exists() or local_tif_path.stat().st_size == 0:
-                logger.error(f"Archivo {manzana_id} no se escribió correctamente")
-                return False
-            
-            gcs_tif_path = f"{GCS_OUTPUT_PREFIX}/{cve_ent}/{cvegeo}.tif"
-            upload_file_to_gcs(bucket, str(local_tif_path), gcs_tif_path)
-            local_tif_path.unlink()
-            
-            return True
-        except Exception as e:
-            logger.error(f"Error escribiendo archivo {manzana_id}: {str(e)}")
-            if local_tif_path.exists():
-                try:
-                    local_tif_path.unlink()
-                except:
-                    pass
-            return False
+        return True
         
     except Exception as e:
         logger.error(f"Error en {manzana_id}: {str(e)}")
