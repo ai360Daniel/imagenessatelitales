@@ -46,7 +46,7 @@ GCS_IMAGES_PREFIX = "manzana/imagenes_satelitales/imagenes"
 GCS_OUTPUT_PREFIX = "manzana/imagenes_satelitales/imagen_manzana"
 
 # Entidades a procesar
-ENTIDADES = [f"{i:02d}" for i in range(9, 10)]  # 27 a 32
+ENTIDADES = [f"{i:02d}" for i in range(27, 33)]  # 27 a 32
 
 LOCAL_TEMP_DIR = Path("./temp_processing")
 LOCAL_TEMP_DIR.mkdir(exist_ok=True)
