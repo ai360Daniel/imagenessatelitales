@@ -1,0 +1,8 @@
+numpy
+pandas
+geopandas
+shapely
+rasterio
+google-cloud-storage
+tqdm
+pyarrow
